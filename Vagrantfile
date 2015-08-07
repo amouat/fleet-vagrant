@@ -8,6 +8,11 @@ Vagrant.require_version ">= 1.6.0"
 CLOUD_CONFIG_PATH = File.join(File.dirname(__FILE__), "user-data")
 CONFIG = File.join(File.dirname(__FILE__), "config.rb")
 
+DNMONSTER = File.join(File.dirname(__FILE__), "dnmonster.service")
+IDENTIDOCK = File.join(File.dirname(__FILE__), "identidock.service")
+REDIS = File.join(File.dirname(__FILE__), "redis.service")
+SKYDNS = File.join(File.dirname(__FILE__), "skydns.service")
+
 # Defaults for config options defined in CONFIG
 $num_instances = 1
 $instance_name_prefix = "core"
@@ -138,6 +143,12 @@ Vagrant.configure("2") do |config|
         config.vm.provision :shell, :inline => "mv /tmp/vagrantfile-user-data /var/lib/coreos-vagrant/", :privileged => true
       end
 
+      #I'm sure there's a much better way to do this. I don't have time to find it though :(
+      
+      config.vm.provision :file, :source => "#{DNMONSTER}", :destination => "/home/core/dnmonster.service"
+      config.vm.provision :file, :source => "#{IDENTIDOCK}", :destination => "/home/core/identidock.service"
+      config.vm.provision :file, :source => "#{REDIS}", :destination => "/home/core/redis.service"
+      config.vm.provision :file, :source => "#{SKYDNS}", :destination => "/home/core/skydns.service"
     end
   end
 end
